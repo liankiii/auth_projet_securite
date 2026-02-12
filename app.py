@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request, redirect, flash, url_for
 from flask_bcrypt import Bcrypt
+import re
 from pathlib import Path
 import json
 import os
@@ -49,12 +50,26 @@ def login():
 
     return render_template("login.html")
 
+def is_valid_username(username):
+    ex = r"^[a-zA-Z0-9_]+$"
+    return re.match(ex, username) is not None
+def is_valid_password(password):
+    ex = r"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$"
+    return re.match(ex, password) is not None
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
     if request.method == "POST":
+        
         username = request.form["username"].strip()
+        if not is_valid_username(username):
+            flash("Identifiant invalide, utilisez uniquement des lettres, chiffres et underscores", "danger")
+            return redirect(url_for("login"))
+
         password = request.form["password"]
+        if not is_valid_password(password):
+            flash("Mot de passe invalide, il doit contenir au moins 8 caractères, une majuscule, une minuscule, un chiffre et un caractère spécial", "danger")
+            return redirect(url_for("login"))
 
         users = load_users()
         if username in users:
@@ -110,6 +125,24 @@ def admin_delete():
 def logout():
     flash("Vous êtes déconnecté", "info")
     return redirect(url_for("login"))
+
+# Security headers: protection contre le clickjacking
+@app.after_request
+def set_security_headers(response):
+    # Empêche l'inclusion de l'application dans un <frame> externe
+    # X-Frame-Options: DENY est un moyen simple et supporté par la plupart des navigateurs
+    response.headers.setdefault("X-Frame-Options", "DENY")
+
+    # Content-Security-Policy: utilisez frame-ancestors 'none' pour bloquer l'encadrement
+    csp_frame = "frame-ancestors 'none';"
+    existing_csp = response.headers.get("Content-Security-Policy")
+    if existing_csp:
+        if "frame-ancestors" not in existing_csp:
+            response.headers["Content-Security-Policy"] = existing_csp + " " + csp_frame
+    else:
+        response.headers["Content-Security-Policy"] = csp_frame
+
+    return response
 
 if __name__ == "__main__":
     app.run(debug=True)
