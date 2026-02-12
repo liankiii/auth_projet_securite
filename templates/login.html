@@ -1,33 +1,50 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-    <title>Connexion</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Connexion</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
-<body>
 
-<img src="{{ url_for('static', filename='logo.png') }}" width="150">
+<body class="page-auth">
 
-<h2>Connexion</h2>
+  <main class="container">
+    <section class="card">
+      <div class="brand">
+        <img src="{{ url_for('static', filename='logo.png') }}" width="48" alt="logo">
+        <div>
+          <div class="muted">Bienvenue</div>
+          <div class="muted" style="font-size:12px">Veuillez vous identifier</div>
+        </div>
+      </div>
 
-<form method="POST">
-    <label>Identifiant</label><br>
-    <input type="text" name="username" required><br><br>
+      <h2>Connexion</h2>
 
-    <label>Mot de passe</label><br>
-    <input type="password" name="password" required><br><br>
+      <form method="POST">
+        <input class="input" type="text" name="username" placeholder="Identifiant" required>
+        <input class="input" type="password" name="password" placeholder="Mot de passe" required>
 
-    <button type="reset">Reset</button>
-    <button type="submit">Valider</button>
-</form>
+        <div class="actions">
+          <button type="reset">Reset</button>
+          <button type="submit">Valider</button>
+        </div>
+      </form>
 
-<br>
-<a href="{{ url_for('register') }}">Ajouter un compte</a>
+      <div style="margin-top:12px">
+        <a href="{{ url_for('register') }}">Créer un compte</a>
+      </div>
 
-{% with messages = get_flashed_messages(with_categories=true) %}
-  {% for category, message in messages %}
-    <p>{{ message }}</p>
-  {% endfor %}
-{% endwith %}
+      {% with messages = get_flashed_messages(with_categories=true) %}
+      {% for category, message in messages %}
+      <div class="flash">{{ message }}</div>
+      {% endfor %}
+      {% endwith %}
+
+    </section>
+  </main>
 
 </body>
+
 </html>

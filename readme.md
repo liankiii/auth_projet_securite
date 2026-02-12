@@ -13,8 +13,8 @@ Les comptes sont stockes dans un fichier JSON local.
 ```bash
 python -m venv .venv
 source .venv/bin/activate
-pip install -r [requirements.txt](http://_vscodecontentref_/0)
+pip install -r requirements.txt
 
 export SECRET_KEY="change_me"
 export ADMIN_TOKEN="mon_token_secret"
-python [app.py](http://_vscodecontentref_/1)
+flask run
