@@ -7,8 +7,7 @@
   <title>Connexion</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
-
-<body class="page-auth">
+<body>
 
   <main class="container">
     <section class="card">
@@ -36,11 +35,15 @@
         <a href="{{ url_for('register') }}">Créer un compte</a>
       </div>
 
-      {% with messages = get_flashed_messages(with_categories=true) %}
-      {% for category, message in messages %}
-      <div class="flash">{{ message }}</div>
-      {% endfor %}
-      {% endwith %}
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    {% for category, message in messages %}
+      <!-- A7: L'auto-escaping est activé par défaut dans Jinja2 -->
+      <p class="alert alert-{{ category }}">{{ message|e }}</p>
+    {% endfor %}
+  {% endif %}
+{% endwith %}
+
 
     </section>
   </main>

@@ -1,5 +1,18 @@
 <!DOCTYPE html>
 <html>
+<head>
+    <title>Accès réussi</title>
+</head>
+<body>
+<!-- A7: Utiliser l'auto-escaping avec |e pour éviter le XSS -->
+<h2>Bienvenue {{ username|e }}</h2>
+<p>Vous êtes connecté ! félicitations</p>
+<img src="{{ url_for('static', filename='meowl.png') }}" width="200" alt="mascotte">
+<a href="{{ url_for('logout') }}">Déconnexion</a>
+</body>
+</html>
+<!DOCTYPE html>
+<html>
 
 <head>
     <meta charset="utf-8">
