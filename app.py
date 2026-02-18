@@ -154,6 +154,7 @@ def dashboard():
     username = session.get('username')
     return render_template("success.html", username=username)
 
+
 @app.route("/logout")
 def logout():
     """A1: Détruire la session lors de la déconnexion"""
